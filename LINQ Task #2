@@ -44,8 +44,8 @@ namespace LINQ
 		public void SortList(string crime)
 		{
 			var prisonersAfterAmnesty = from Prisoner prisoner in _prisoners
-										where prisoner.Crime != crime
-										select prisoner;
+						    where prisoner.Crime != crime
+						    select prisoner;
 			_prisoners = prisonersAfterAmnesty.ToList();
 		}
 	}
@@ -56,7 +56,6 @@ namespace LINQ
 		{
 			Name = name;
 			Crime = crime;
-
 		}
 
 		public string Name { get; private set; }
