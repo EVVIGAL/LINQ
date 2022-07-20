@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			CriminalBase criminalBase = new();
+			bool isWorking = true;
+
+			while (isWorking)
+			{
+				Console.Clear();
+				RequestInfo(out int userInputHeight, out int userInputWeight, out string nationality);
+				criminalBase.ShowFreeCriminals(userInputHeight, userInputWeight, nationality);
+
+				Console.WriteLine("\nЧтобы продолжить работу нажмите Enter. Чтобы выйти введите 'Exit' и нажмите Enter.");
+				string userInput = Console.ReadLine();
+
+				if (userInput == "Exit")
+					isWorking = false;
+			}
+		}
+
+		static int GetNumber()
+		{
+			bool success = false;
+			int number = 0;
+
+			while (success == false)
+			{
+				string userInput = Console.ReadLine();
+				success = int.TryParse(userInput, out number);
+
+				if (success == false)
+					Console.WriteLine("Ошибка ввода. Введите число!");
+			}
+
+			return number;
+		}
+
+		static void RequestInfo(out int userInputHeight, out int userInputWeight, out string nationality)
+		{
+			Console.Write("Введите параметры для сортировки преступников:\nРост - ");
+			userInputHeight = GetNumber();
+			Console.Write("Введите параметры для сортировки преступников:\nВес - ");
+			userInputWeight = GetNumber();
+			Console.Write("Введите параметры для сортировки преступников:\nНациональность - ");
+			nationality = Console.ReadLine();
+		}
+	}
+
+	class CriminalBase
+	{
+		private List<Criminal> _criminals = new();
+
+		public CriminalBase()
+		{
+			_criminals.Add(new Criminal(false, "Jack", "American", 180, 90));
+			_criminals.Add(new Criminal(false, "Andrey", "Russian", 190, 90));
+			_criminals.Add(new Criminal(true, "Yokotaro", "Japanese", 170, 60));
+			_criminals.Add(new Criminal(false, "SunVe", "Korean", 180, 96));
+			_criminals.Add(new Criminal(true, "Duglas", "American", 180, 90));
+			_criminals.Add(new Criminal(false, "Saimon", "American", 180, 90));
+		}
+
+		public void ShowFreeCriminals(int height, int weight, string nationality)
+		{
+			var freeCriminals = from Criminal criminal in _criminals
+								where criminal.Height == height && criminal.Weight == weight && criminal.Nationality == nationality && criminal.IsDetained == false
+								select criminal;
+
+			if (freeCriminals.Any())
+			{
+				Console.WriteLine("\nНе заключенные под стражу преступники подходящие под описание:");
+
+				foreach (var criminal in freeCriminals)
+					Console.WriteLine(criminal.Name);
+
+				Console.ReadKey();
+			}
+			else
+			{
+				Console.WriteLine("\nНет преступников подходящих под описание.");
+				Console.ReadKey();
+			}
+		}
+	}
+
+	class Criminal
+	{
+		public Criminal(bool isdetained, string name, string nationality, int height, int weight)
+		{
+			IsDetained = isdetained;
+			Name = name;
+			Nationality = nationality;
+			Height = height;
+			Weight = weight;
+		}
+
+		public bool IsDetained { get; private set; }
+
+		public string Name { get; private set; }
+
+		public string Nationality { get; private set; }
+
+		public int Height { get; private set; }
+
+		public int Weight { get; private set; }
+	}
+}
