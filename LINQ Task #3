@@ -1,0 +1,130 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Hospital hospital = new();
+			bool isWorking = true;
+
+			while (isWorking)
+			{
+				Console.Clear();
+				Console.WriteLine("You are in the Saint Nino's Hospital. Select a command:\n1 - Sort patients by name\n2 - Sort patients by age\n3 - Sort patients by typed in disease\n4 - Exit");
+				int userInput = GetNumber();
+
+				switch (userInput)
+				{
+					case 1:
+						hospital.SortPatientsByName();
+						break;
+					case 2:
+						hospital.SortPatientsByAge();
+						break;
+					case 3:
+						hospital.SortPatientsByDisease();
+						break;
+					case 4:
+						isWorking = false;
+						break;
+					default:
+						Console.WriteLine("Input error!");
+						Console.ReadKey();
+						break;
+				}
+			}
+		}
+
+		static int GetNumber()
+		{
+			bool success = false;
+			int number = 0;
+
+			while (success == false)
+			{
+				string userInput = Console.ReadLine();
+				success = int.TryParse(userInput, out number);
+
+				if (success == false)
+					Console.WriteLine("Ошибка ввода. Введите число!");
+			}
+
+			return number;
+		}
+	}
+
+	class Hospital
+	{
+		private List<Patient> _patients = new();
+
+		public Hospital()
+		{
+			_patients.Add(new Patient("Jack", "Flu", 15));
+			_patients.Add(new Patient("Andrey", "Lupus", 22));
+			_patients.Add(new Patient("Yokotaro", "Flu", 17));
+			_patients.Add(new Patient("SunVe", "Lupus", 36));
+			_patients.Add(new Patient("Duglas", "Flu", 21));
+			_patients.Add(new Patient("Saimon", "Dysentery", 33));
+			_patients.Add(new Patient("Irvin", "Lupus", 27));
+			_patients.Add(new Patient("Duglas", "Flu", 20));
+			_patients.Add(new Patient("Andrey", "Dysentery", 49));
+			_patients.Add(new Patient("Saimon", "Dysentery", 13));
+		}
+
+		public void SortPatientsByDisease()
+		{
+			Console.WriteLine("Type in the disease to show diseased patients");
+			string userInput = Console.ReadLine();
+			var sortedPatients = _patients.Where(patient => patient.Disease == userInput).Select(patient => patient);
+
+			if (sortedPatients.Any())
+				ShowInfo(sortedPatients);
+			else
+				Console.WriteLine("There is nothing by your input");
+
+			Console.ReadKey();
+		}
+
+		public void SortPatientsByName()
+		{
+			Console.WriteLine("Patients sorted by name:");
+			var sortedPatients = _patients.OrderBy(patient => patient.Name);
+			ShowInfo(sortedPatients);
+			Console.ReadKey();
+		}
+
+		public void SortPatientsByAge()
+		{
+			Console.WriteLine("Patients sorted by age:");
+			var sortedPatients = _patients.OrderBy(patient => patient.Age);
+			ShowInfo(sortedPatients);
+			Console.ReadKey();
+		}
+
+		private void ShowInfo(IEnumerable<Patient> sortedPatients)
+		{
+			foreach (var patient in sortedPatients)
+				Console.WriteLine($"{patient.Name} - disease is {patient.Disease}, age {patient.Age}");
+		}
+	}
+
+	class Patient
+	{
+		public Patient(string name, string disease, int age)
+		{
+			Name = name;
+			Disease = disease;
+			Age = age;
+		}
+
+		public string Name { get; private set; }
+
+		public string Disease { get; private set; }
+
+		public int Age { get; private set; }
+	}
+}
