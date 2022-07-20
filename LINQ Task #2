@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Prison prison = new();
+			Console.WriteLine("Prisoners list:");
+			prison.ShowInfo();
+			Console.ReadKey();
+			Console.WriteLine("This is amnesty! Antigovernment crime is not crime anymore!");
+			prison.SortList("Antigovernment");
+			Console.ReadKey();
+			Console.WriteLine("Prisoners list:");
+			prison.ShowInfo();
+			Console.ReadKey();
+		}
+	}
+
+	class Prison
+	{
+		private List<Prisoner> _prisoners = new();
+
+		public Prison()
+		{
+			_prisoners.Add(new Prisoner("Jack", "Heist"));
+			_prisoners.Add(new Prisoner("Andrey", "Antigovernment"));
+			_prisoners.Add(new Prisoner("Yokotaro", "Heist"));
+			_prisoners.Add(new Prisoner("SunVe", "Murder"));
+			_prisoners.Add(new Prisoner("Duglas", "Antigovernment"));
+			_prisoners.Add(new Prisoner("Saimon", "Antigovernment"));
+		}
+
+		public void ShowInfo()
+		{
+			foreach (var prisoner in _prisoners)
+				Console.WriteLine($"{prisoner.Name} - {prisoner.Crime}");
+		}
+
+		public void SortList(string crime)
+		{
+			var prisonersAfterAmnesty = from Prisoner prisoner in _prisoners
+										where prisoner.Crime != crime
+										select prisoner;
+			_prisoners = prisonersAfterAmnesty.ToList();
+		}
+	}
+
+	class Prisoner
+	{
+		public Prisoner(string name, string crime)
+		{
+			Name = name;
+			Crime = crime;
+
+		}
+
+		public string Name { get; private set; }
+
+		public string Crime { get; private set; }
+	}
+}
