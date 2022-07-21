@@ -18,7 +18,6 @@ namespace LINQ
 	class Database
 	{
 		private List<Soldier> _soldiers = new();
-		private Dictionary<string, string> _sortedSoldiers = new();
 
 		public Database()
 		{
@@ -32,14 +31,11 @@ namespace LINQ
 		public void ShowNameAndRank()
 		{
 			Console.WriteLine($"Name and rank of soldiers:");
-			var soldiersName = _soldiers.Select(soldier => soldier.Name);
-			var soldiersRank = _soldiers.Select(soldier => soldier.Rank);
+			var soldiers = from Soldier soldier in _soldiers
+						   select new { Name = soldier.Name, Rank = soldier.Rank };
 
-			for (int i = 0; i < _soldiers.Count(); i++)
-				_sortedSoldiers.Add(soldiersName.ElementAt(i), soldiersRank.ElementAt(i));
-
-			foreach (var soldier in _sortedSoldiers)
-				Console.WriteLine($"{soldier.Key} - {soldier.Value}");
+			foreach (var soldier in soldiers)
+				Console.WriteLine($"{soldier.Name} - {soldier.Rank}");
 
 			Console.ReadKey();
 		}
