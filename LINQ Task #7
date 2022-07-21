@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Database database = new();
+			Console.WriteLine("There are our platoons\n");
+			database.ShowFirstPlatoon();
+			database.ShowSecondPlatoon();
+			Console.ReadKey();
+			Console.WriteLine("\nPress Enter to transfer all soldiers whos surname starts with 'Б' from first platoon to second\n");
+			Console.ReadKey();
+			database.TransferTheSoldiers();
+			Console.WriteLine("There are our new platoons\n");
+			database.ShowFirstPlatoon();
+			database.ShowSecondPlatoon();
+			Console.ReadKey();
+		}
+	}
+
+	class Database
+	{
+		private List<Soldier> _firstPlatoon = new();
+		private List<Soldier> _secondPlatoon = new();
+
+		public Database()
+		{
+			_firstPlatoon.Add(new Soldier("Андропов"));
+			_firstPlatoon.Add(new Soldier("Ананин"));
+			_firstPlatoon.Add(new Soldier("Борисов"));
+			_firstPlatoon.Add(new Soldier("Яковлев"));
+			_firstPlatoon.Add(new Soldier("Богданов"));
+			_secondPlatoon.Add(new Soldier("Ирзоев"));
+			_secondPlatoon.Add(new Soldier("Власов"));
+			_secondPlatoon.Add(new Soldier("Мишустин"));
+			_secondPlatoon.Add(new Soldier("Радибоженков"));
+			_secondPlatoon.Add(new Soldier("Дуглас"));
+		}
+
+		public void ShowFirstPlatoon()
+		{
+			Console.WriteLine("1st platoon");
+			SortPlatoon(_firstPlatoon);
+		}
+
+		public void ShowSecondPlatoon()
+		{
+			Console.WriteLine("\n2nd platoon");
+			SortPlatoon(_secondPlatoon);
+		}
+
+		public void TransferTheSoldiers()
+		{
+			var chosenSoldiers = _firstPlatoon.Where(soldier => soldier.Surname.StartsWith("Б"));
+			_firstPlatoon = _firstPlatoon.Except(chosenSoldiers).ToList();
+			_secondPlatoon.AddRange(chosenSoldiers);
+		}
+
+		private void SortPlatoon(List<Soldier> platoon)
+		{
+			var sortedPlatoon = platoon.OrderBy(soldier => soldier.Surname);
+
+			foreach (var soldier in sortedPlatoon)
+				Console.WriteLine(soldier.Surname);
+		}
+	}
+
+	class Soldier
+	{
+		public Soldier(string surname)
+		{
+			Surname = surname;
+		}
+
+		public string Surname { get; private set; }
+	}
+}
