@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Database database = new();
+			Console.WriteLine("Press Enter to see name and rank of soldiers");
+			Console.ReadKey();
+			database.ShowNameAndRank();
+		}
+	}
+
+	class Database
+	{
+		private List<Soldier> _soldiers = new();
+		private Dictionary<string, string> _sortedSoldiers = new();
+
+		public Database()
+		{
+			_soldiers.Add(new Soldier("Jack", "Sergeant", "Rifle", 8));
+			_soldiers.Add(new Soldier("Andrey", "Private", "Rifle", 3));
+			_soldiers.Add(new Soldier("Yokotaro", "Sergeant", "Knife", 7));
+			_soldiers.Add(new Soldier("SunVe", "Private", "Shotgun", 1));
+			_soldiers.Add(new Soldier("Duglas", "Sergeant", "Sword", 11));
+		}
+
+		public void ShowNameAndRank()
+		{
+			Console.WriteLine($"Name and rank of soldiers:");
+			var soldiersName = _soldiers.Select(soldier => soldier.Name);
+			var soldiersRank = _soldiers.Select(soldier => soldier.Rank);
+
+			for (int i = 0; i < _soldiers.Count(); i++)
+				_sortedSoldiers.Add(soldiersName.ElementAt(i), soldiersRank.ElementAt(i));
+
+			foreach (var soldier in _sortedSoldiers)
+				Console.WriteLine($"{soldier.Key} - {soldier.Value}");
+
+			Console.ReadKey();
+		}
+	}
+
+	class Soldier
+	{
+		public Soldier(string name, string rank, string weapon, int serviceLife)
+		{
+			Name = name;
+			Rank = rank;
+			Weapon = weapon;
+			ServiceLife = serviceLife;
+		}
+
+		public string Name { get; private set; }
+
+		public string Rank { get; private set; }
+
+		public string Weapon { get; private set; }
+
+		public int ServiceLife { get; private set; }
+	}
+}
