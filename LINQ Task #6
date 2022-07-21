@@ -31,8 +31,7 @@ namespace LINQ
 		public void ShowNameAndRank()
 		{
 			Console.WriteLine($"Name and rank of soldiers:");
-			var soldiers = from Soldier soldier in _soldiers
-						   select new { Name = soldier.Name, Rank = soldier.Rank };
+			var soldiers = _soldiers.Select(soldier => new { Name = soldier.Name, Rank = soldier.Rank };
 
 			foreach (var soldier in soldiers)
 				Console.WriteLine($"{soldier.Name} - {soldier.Rank}");
