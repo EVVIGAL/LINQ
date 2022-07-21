@@ -1,0 +1,114 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			DataBase dataBase = new();
+			bool isWorking = true;
+			int topCounter = 3;
+
+			while (isWorking)
+			{
+				Console.Clear();
+				Console.WriteLine($"There is players database. Select a command:\n1 - Show top {topCounter} players by level\n2 - Show top {topCounter} players by power\n3 - Exit");
+				int userInput = GetNumber();
+
+				switch (userInput)
+				{
+					case 1:
+						dataBase.ShowTopByLevel(topCounter);
+						break;
+					case 2:
+						dataBase.ShowTopByPower(topCounter);
+						break;
+					case 3:
+						isWorking = false;
+						break;
+					default:
+						Console.WriteLine("Input error!");
+						Console.ReadKey();
+						break;
+				}
+			}
+		}
+
+		static int GetNumber()
+		{
+			bool success = false;
+			int number = 0;
+
+			while (success == false)
+			{
+				string userInput = Console.ReadLine();
+				success = int.TryParse(userInput, out number);
+
+				if (success == false)
+					Console.WriteLine("Ошибка ввода. Введите число!");
+			}
+
+			return number;
+		}
+	}
+
+	class DataBase
+	{
+		private List<Player> _players = new();
+
+		public DataBase()
+		{
+			_players.Add(new Player("Jack", 2, 2000));
+			_players.Add(new Player("Andrey", 1, 1520));
+			_players.Add(new Player("Yokotaro", 12, 11860));
+			_players.Add(new Player("SunVe", 1, 1480));
+			_players.Add(new Player("Duglas", 15, 12500));
+			_players.Add(new Player("Saimon", 17, 12500));
+			_players.Add(new Player("Irvin", 8, 9501));
+			_players.Add(new Player("Ivan", 5, 7600));
+			_players.Add(new Player("Pedro", 14, 13321));
+			_players.Add(new Player("Nikita", 21, 19700));
+		}
+
+		public void ShowTopByLevel(int topCounter)
+		{
+			Console.WriteLine($"Top {topCounter} players by level:");
+			var sortedPlayers = _players.OrderByDescending(_players => _players.Level);
+			ShowTop(sortedPlayers, topCounter);
+			Console.ReadKey();
+		}
+
+		public void ShowTopByPower(int topCounter)
+		{
+			Console.WriteLine($"Top {topCounter} players by power:");
+			var sortedPlayers = _players.OrderByDescending(_players => _players.Power);
+			ShowTop(sortedPlayers, topCounter);
+			Console.ReadKey();
+		}
+
+		private void ShowTop(IEnumerable<Player> sortedPlayers, int topCounter)
+		{
+			for (int i = 0; i < topCounter; i++)
+				Console.WriteLine($"{sortedPlayers.ElementAt(i).Name} - level is {sortedPlayers.ElementAt(i).Level}, power {sortedPlayers.ElementAt(i).Power}");
+		}
+	}
+
+	class Player
+	{
+		public Player(string name, int level, int power)
+		{
+			Name = name;
+			Level = level;
+			Power = power;
+		}
+
+		public string Name { get; private set; }
+
+		public int Level { get; private set; }
+
+		public int Power { get; private set; }
+	}
+}
