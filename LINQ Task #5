@@ -1,0 +1,68 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace LINQ
+{
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Fridge fridge = new();
+			int currentYear = 2022;
+			Console.Clear();
+			Console.WriteLine($"There is fridge with canned meat:");
+			fridge.ShowInfo();
+			Console.WriteLine("\nPress Enter to show only expired meat.\n");
+			Console.ReadKey();
+			fridge.ShowExpiredMeat(currentYear);
+		}
+	}
+
+	class Fridge
+	{
+		private List<CannedMeat> _cannedMeat = new();
+
+		public Fridge()
+		{
+			_cannedMeat.Add(new CannedMeat("Glavproduct", 1985, 40));
+			_cannedMeat.Add(new CannedMeat("MeatBoy", 2002, 15));
+			_cannedMeat.Add(new CannedMeat("CowBoy", 2018, 5));
+			_cannedMeat.Add(new CannedMeat("WithPleasure", 2021, 3));
+			_cannedMeat.Add(new CannedMeat("MeatGirl", 2007, 13));
+		}
+
+		public void ShowExpiredMeat(int currentYear)
+		{
+			Console.WriteLine($"Expired meat:");
+			var sortedMeat = _cannedMeat.Where(_cannedMeat => _cannedMeat.ProductionDate + _cannedMeat.ShelfLife < currentYear).Select(_cannedMeat => _cannedMeat);
+
+			foreach (var cannedMeat in sortedMeat)
+				Console.WriteLine($"{cannedMeat.Name} - expired in {cannedMeat.ProductionDate + cannedMeat.ShelfLife} year");
+
+			Console.ReadKey();
+		}
+
+		public void ShowInfo()
+		{
+			foreach (CannedMeat meat in _cannedMeat)
+				Console.WriteLine(meat.Name);
+		}
+	}
+
+	class CannedMeat
+	{
+		public CannedMeat(string name, int productionDate, int shelfLife)
+		{
+			Name = name;
+			ProductionDate = productionDate;
+			ShelfLife = shelfLife;
+		}
+
+		public string Name { get; private set; }
+
+		public int ProductionDate { get; private set; }
+
+		public int ShelfLife { get; private set; }
+	}
+}
