@@ -58,7 +58,7 @@ namespace LINQ
 		{
 			var chosenSoldiers = _firstPlatoon.Where(soldier => soldier.Surname.StartsWith("Б"));
 			_firstPlatoon = _firstPlatoon.Except(chosenSoldiers).ToList();
-			_secondPlatoon.AddRange(chosenSoldiers);
+			_secondPlatoon = _secondPlatoon.Concat(chosenSoldiers).ToList();
 		}
 
 		private void SortPlatoon(List<Soldier> platoon)
